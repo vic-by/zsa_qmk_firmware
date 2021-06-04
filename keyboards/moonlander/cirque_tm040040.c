@@ -1,5 +1,4 @@
 // Copyright (c) 2018 Cirque Corp. Restrictions apply. See: www.cirque.com/sw-license
-
 #include "i2c_master.h"
 #include "cirque_tm040040.h"
 
@@ -31,6 +30,7 @@ absData_t touchData;
 #ifdef CONSOLE_ENABLE
 void print_byte(uint8_t byte) { dprintf("%c%c%c%c%c%c%c%c|", (byte & 0x80 ? '1' : '0'), (byte & 0x40 ? '1' : '0'), (byte & 0x20 ? '1' : '0'), (byte & 0x10 ? '1' : '0'), (byte & 0x08 ? '1' : '0'), (byte & 0x04 ? '1' : '0'), (byte & 0x02 ? '1' : '0'), (byte & 0x01 ? '1' : '0')); }
 #endif
+
 void pointing_device_task(void) {
         Pinnacle_GetAbsolute(&touchData);
         ScaleData(&touchData, 256, 256);  // Scale coordinates to arbitrary X, Y resolution
@@ -150,8 +150,9 @@ void RAP_ReadBytes(uint8_t address, uint8_t* data, uint8_t count) {
     uint8_t cmdByte = READ_MASK | address;  // Form the READ command byte
     // uint8_t i       = 0;
 
-    i2c_start(SLAVE_ADDR);
-    i2c_readReg(SLAVE_ADDR, cmdByte, data, sizeof(count), I2C_TIMEOUT);
+    i2c_start(SLAVE_ADDR << 1);
+    i2c_writeReg(SLAVE_ADDR << 1, cmdByte, NULL, 0, I2C_TIMEOUT);
+    i2c_readReg(SLAVE_ADDR << 1, cmdByte, data, count, I2C_TIMEOUT);
     i2c_stop();
     // Wire.beginTransmission(SLAVE_ADDR);  // Set up an I2C-write to the I2C slave (Pinnacle)
     // Wire.write(cmdByte);                 // Signal a RAP-read operation starting at <address>
@@ -167,8 +168,8 @@ void RAP_ReadBytes(uint8_t address, uint8_t* data, uint8_t count) {
 void RAP_Write(uint8_t address, uint8_t data) {
     uint8_t cmdByte = WRITE_MASK | address;  // Form the WRITE command byte
 
-    i2c_start(SLAVE_ADDR);
-    i2c_writeReg(SLAVE_ADDR, cmdByte, &data, sizeof(data), I2C_TIMEOUT);
+    i2c_start(SLAVE_ADDR<< 1);
+    i2c_writeReg(SLAVE_ADDR << 1, cmdByte, &data, sizeof(data), I2C_TIMEOUT);
     i2c_stop();
 
     // Wire.beginTransmission(SLAVE_ADDR);  // Set up an I2C-write to the I2C slave (Pinnacle)
