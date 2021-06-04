@@ -24,3 +24,46 @@ void RAP_ReadBytes(uint8_t address, uint8_t* data, uint8_t count);
 void RAP_Write(uint8_t address, uint8_t data);
 void ClipCoordinates(absData_t* coordinates);
 void ScaleData(absData_t* coordinates, uint16_t xResolution, uint16_t yResolution);
+
+// Cirque's 7-bit I2C Slave Address
+#define SLAVE_ADDR           0x2A
+
+// Masks for Cirque Register Access Protocol (RAP)
+#define WRITE_MASK           0x80
+#define READ_MASK            0xA0
+
+// Registers for RAP
+#define FIRMWARE_ID          0x00
+#define FIRMWARE_VERSION     0x01
+#define STATUS_1             0x02
+#define SYSCONFIG_1          0x03
+#define FEEDCONFIG_1         0x04
+#define FEEDCONFIG_2         0x05
+#define CALIBRATION_CONFIG_1 0x07
+#define PS2_AU_CONTROL       0x08
+#define SAMPLE_RATE          0x09
+#define Z_IDLE_COUNT         0x0A
+#define Z_SCALER             0x0B
+#define SLEEP_INTERVAL       0x0C
+#define SLEEP_TIMER          0x0D
+#define PACKET_BYTE_0        0x12
+#define PACKET_BYTE_1        0x13
+#define PACKET_BYTE_2        0x14
+#define PACKET_BYTE_3        0x15
+#define PACKET_BYTE_4        0x16
+#define PACKET_BYTE_5        0x17
+
+// Coordinate scaling values
+#define PINNACLE_XMAX        2047 // max value Pinnacle can report for X
+#define PINNACLE_YMAX        1535 // max value Pinnacle can report for Y
+#define PINNACLE_X_LOWER     127  // min "reachable" X value
+#define PINNACLE_X_UPPER     1919 // max "reachable" X value
+#define PINNACLE_Y_LOWER     63   // min "reachable" Y value
+#define PINNACLE_Y_UPPER     1471 // max "reachable" Y value
+#define PINNACLE_X_RANGE     (PINNACLE_X_UPPER - PINNACLE_X_LOWER)
+#define PINNACLE_Y_RANGE     (PINNACLE_Y_UPPER - PINNACLE_Y_LOWER)
+
+#define ERA_VALUE            0x1B
+#define ERA_HIGH_BYTE        0x1C
+#define ERA_LOW_BYTE         0x1D
+#define ERA_CONTROL          0x1E
