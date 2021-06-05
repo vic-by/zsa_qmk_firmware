@@ -13,6 +13,14 @@ typedef struct {
     bool     touchDown;
 } absData_t;
 
+typedef struct {
+    uint8_t xValue;
+    uint8_t yValue;
+    uint8_t zValue;
+    uint8_t buttonFlags;
+    bool    touchDown;
+} relativeData_t;
+
 extern absData_t touchData;
 
 void Pinnacle_GetAbsolute(absData_t* result);

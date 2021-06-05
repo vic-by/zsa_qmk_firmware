@@ -2,31 +2,34 @@
 #include "i2c_master.h"
 #include "cirque_tm040040.h"
 
-
 // Register config values for this demo
-#define SYSCONFIG_1_VALUE  0x00
-#define FEEDCONFIG_1_VALUE 0x03
-#define FEEDCONFIG_2_VALUE 0x1F
-#define Z_IDLE_COUNT_VALUE 0x05
+#ifndef SYSCONFIG_1_VALUE
+#    define SYSCONFIG_1_VALUE 0x00
+#endif
+#ifndef FEEDCONFIG_1_VALUE
+#    define FEEDCONFIG_1_VALUE 0x03 // 0x03 for absolute mode 0x01 for relative mode
+#endif
+#ifndef FEEDCONFIG_2_VALUE
+#    define FEEDCONFIG_2_VALUE 0x1F // 0x1F for normal functionality 0x1E for intellimouse disabled
+#endif
+#ifndef Z_IDLE_COUNT_VALUE
+#    define Z_IDLE_COUNT_VALUE 0x05
+#endif
 
 absData_t touchData;
 
-#ifdef CONSOLE_ENABLE
 void print_byte(uint8_t byte) { dprintf("%c%c%c%c%c%c%c%c|", (byte & 0x80 ? '1' : '0'), (byte & 0x40 ? '1' : '0'), (byte & 0x20 ? '1' : '0'), (byte & 0x10 ? '1' : '0'), (byte & 0x08 ? '1' : '0'), (byte & 0x04 ? '1' : '0'), (byte & 0x02 ? '1' : '0'), (byte & 0x01 ? '1' : '0')); }
-#endif
 
 void pointing_device_task(void) {
     Pinnacle_GetAbsolute(&touchData);
     ScaleData(&touchData, 256, 256); // Scale coordinates to arbitrary X, Y resolution
 
-#ifdef CONSOLE_ENABLE
     print_byte(touchData.xValue);
     print_byte(touchData.yValue);
     print_byte(touchData.zValue);
     print_byte(touchData.buttonFlags);
     print_byte(touchData.touchDown);
     dprintf("\n");
-#endif
 }
 
 /*  Pinnacle-based TM040040 Functions  */
