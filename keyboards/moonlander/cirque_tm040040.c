@@ -18,7 +18,7 @@
 
 absData_t touchData;
 
-void print_byte(uint8_t byte) { dprintf("%c%c%c%c%c%c%c%c|", (byte & 0x80 ? '1' : '0'), (byte & 0x40 ? '1' : '0'), (byte & 0x20 ? '1' : '0'), (byte & 0x10 ? '1' : '0'), (byte & 0x08 ? '1' : '0'), (byte & 0x04 ? '1' : '0'), (byte & 0x02 ? '1' : '0'), (byte & 0x01 ? '1' : '0')); }
+void print_byte(uint8_t byte) { xprintf("%c%c%c%c%c%c%c%c|", (byte & 0x80 ? '1' : '0'), (byte & 0x40 ? '1' : '0'), (byte & 0x20 ? '1' : '0'), (byte & 0x10 ? '1' : '0'), (byte & 0x08 ? '1' : '0'), (byte & 0x04 ? '1' : '0'), (byte & 0x02 ? '1' : '0'), (byte & 0x01 ? '1' : '0')); }
 
 void pointing_device_task(void) {
     Pinnacle_GetAbsolute(&touchData);
@@ -29,7 +29,7 @@ void pointing_device_task(void) {
     print_byte(touchData.zValue);
     print_byte(touchData.buttonFlags);
     print_byte(touchData.touchDown);
-    dprintf("\n");
+    xprintf("\n");
 }
 
 /*  Pinnacle-based TM040040 Functions  */
@@ -51,8 +51,8 @@ void pointing_device_init(void) {
 // Reads XYZ data from Pinnacle registers 0x14 through 0x17
 // Stores result in absData_t struct with xValue, yValue, and zValue members
 void Pinnacle_GetAbsolute(absData_t* result) {
-    uint8_t data[6] = {0, 0, 0, 0, 0, 0};
-    RAP_ReadBytes(PACKET_BYTE_0), data, 6);
+    uint8_t data[6] = { 0 };
+    RAP_ReadBytes(PACKET_BYTE_0, data, 6);
 
     Pinnacle_ClearFlags();
 

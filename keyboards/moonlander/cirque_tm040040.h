@@ -16,9 +16,8 @@ typedef struct {
 typedef struct {
     uint8_t xValue;
     uint8_t yValue;
-    uint8_t zValue;
+    uint8_t wValue;
     uint8_t buttonFlags;
-    bool    touchDown;
 } relativeData_t;
 
 extern absData_t touchData;
