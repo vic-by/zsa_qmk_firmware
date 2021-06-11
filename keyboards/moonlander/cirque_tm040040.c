@@ -1,26 +1,30 @@
 // Copyright (c) 2018 Cirque Corp. Restrictions apply. See: www.cirque.com/sw-license
 #include "i2c_master.h"
 #include "cirque_tm040040.h"
+#include "pointing_device.h"
 
 // Register config values for this demo
 #ifndef SYSCONFIG_1_VALUE
 #    define SYSCONFIG_1_VALUE 0x00
 #endif
 #ifndef FEEDCONFIG_1_VALUE
-#    define FEEDCONFIG_1_VALUE 0x03 // 0x03 for absolute mode 0x01 for relative mode
+#    define FEEDCONFIG_1_VALUE 0x81 // 0x03 for absolute mode 0x01 for relative mode
 #endif
 #ifndef FEEDCONFIG_2_VALUE
-#    define FEEDCONFIG_2_VALUE 0x1F // 0x1F for normal functionality 0x1E for intellimouse disabled
+#    define FEEDCONFIG_2_VALUE 0x18 // 0x1F for normal functionality 0x1E for intellimouse disabled
 #endif
 #ifndef Z_IDLE_COUNT_VALUE
 #    define Z_IDLE_COUNT_VALUE 0x05
 #endif
 
-absData_t touchData;
+absData_t touchData = { 0 };
+relData_t rTouchData ={ 0 };
 
 void print_byte(uint8_t byte) { xprintf("%c%c%c%c%c%c%c%c|", (byte & 0x80 ? '1' : '0'), (byte & 0x40 ? '1' : '0'), (byte & 0x20 ? '1' : '0'), (byte & 0x10 ? '1' : '0'), (byte & 0x08 ? '1' : '0'), (byte & 0x04 ? '1' : '0'), (byte & 0x02 ? '1' : '0'), (byte & 0x01 ? '1' : '0')); }
 
 void pointing_device_task(void) {
+    report_mouse_t mouse_report = pointing_device_get_report();
+#if FEEDCONFIG_1_VALUE == 0x03
     Pinnacle_GetAbsolute(&touchData);
     ScaleData(&touchData, 256, 256); // Scale coordinates to arbitrary X, Y resolution
 
@@ -30,6 +34,22 @@ void pointing_device_task(void) {
     print_byte(touchData.buttonFlags);
     print_byte(touchData.touchDown);
     xprintf("\n");
+#elif FEEDCONFIG_1_VALUE == 0x81
+    Pinnacle_GetRelative(&rTouchData);
+
+    mouse_report.x = rTouchData.xValue;
+    mouse_report.y = rTouchData.yValue;
+    if (rTouchData.buttonFlags) {
+        mouse_report.buttons |= MOUSE_BTN1;
+    } else {
+        mouse_report.buttons &= ~MOUSE_BTN1;
+    }
+
+    rTouchData.xValue = 0;
+    rTouchData.yValue = 0;
+#endif
+    pointing_device_set_report(mouse_report);
+    pointing_device_send();
 }
 
 /*  Pinnacle-based TM040040 Functions  */
@@ -62,6 +82,20 @@ void Pinnacle_GetAbsolute(absData_t* result) {
     result->zValue      = data[5] & 0x3F;
 
     result->touchDown = result->xValue != 0;
+}
+// Reads XYZ data from Pinnacle registers 0x14 through 0x17
+// Stores result in absData_t struct with xValue, yValue, and zValue members
+void Pinnacle_GetRelative(relData_t* result) {
+    uint8_t data[3] = { 0 };
+    RAP_ReadBytes(PACKET_BYTE_0, data, 3);
+
+    Pinnacle_ClearFlags();
+
+    result->buttonFlags = (bool)(data[0] & 0x07);
+    result->xValue = (int8_t)data[1];
+    result->yValue = (int8_t)data[2];
+    xprintf("Raw X: %3u Neg: %u Raw Y: %3u Neg: %u X:%4d Y: %4d\n", data[1], (data[0] >> 4) & 0x1, data[2], (data[0] >> 5) & 0x1, (int8_t)data[1], (int8_t)data[2]);
+
 }
 
 // Clears Status1 register flags (SW_CC and SW_DR)

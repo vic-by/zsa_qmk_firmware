@@ -14,21 +14,22 @@ typedef struct {
 } absData_t;
 
 typedef struct {
-    uint8_t xValue;
-    uint8_t yValue;
-    uint8_t wValue;
-    uint8_t buttonFlags;
-} relativeData_t;
+    int8_t xValue;
+    int8_t yValue;
+    bool buttonFlags;
+} relData_t;
 
 extern absData_t touchData;
+extern relData_t rTouchData;
 
 void Pinnacle_GetAbsolute(absData_t* result);
+void Pinnacle_GetRelative(relData_t* result);
 void Pinnacle_ClearFlags(void);
 void Pinnacle_EnableFeed(bool feedEnable);
 void ERA_ReadBytes(uint16_t address, uint8_t* data, uint16_t count);
 void ERA_WriteByte(uint16_t address, uint8_t data);
 void RAP_ReadBytes(uint8_t address, uint8_t* data, uint8_t count);
-void RAP_Write(uint8_t address, uint8_t data);
+void RAP_Write(uint8_t address, uint8_t data);;;-
 void ClipCoordinates(absData_t* coordinates);
 void ScaleData(absData_t* coordinates, uint16_t xResolution, uint16_t yResolution);
 
