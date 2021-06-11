@@ -29,7 +29,7 @@ void Pinnacle_EnableFeed(bool feedEnable);
 void ERA_ReadBytes(uint16_t address, uint8_t* data, uint16_t count);
 void ERA_WriteByte(uint16_t address, uint8_t data);
 void RAP_ReadBytes(uint8_t address, uint8_t* data, uint8_t count);
-void RAP_Write(uint8_t address, uint8_t data);;;-
+void RAP_Write(uint8_t address, uint8_t data);
 void ClipCoordinates(absData_t* coordinates);
 void ScaleData(absData_t* coordinates, uint16_t xResolution, uint16_t yResolution);
 
