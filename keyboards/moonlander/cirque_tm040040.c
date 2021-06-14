@@ -1,4 +1,5 @@
 // Copyright (c) 2018 Cirque Corp. Restrictions apply. See: www.cirque.com/sw-license
+#include "moonlander.h"
 #include "i2c_master.h"
 #include "i2c2_master.h"
 #include "cirque_tm040040.h"
@@ -37,7 +38,7 @@ void pointing_device_task(void) {
     int8_t report_x = 0, report_y = 0;
 
     Pinnacle_GetAbsolute(&touchData);
-    ScaleData(&touchData, 1024, 1024);  // Scale coordinates to arbitrary X, Y resolution
+    ScaleData(&touchData, 256 * keyboard_config.dpi_config, 256 * keyboard_config.dpi_config);  // Scale coordinates to arbitrary X, Y resolution
 
     if (x && y && touchData.xValue && touchData.yValue) {
         report_x = (int8_t)(touchData.xValue - x);
@@ -72,7 +73,7 @@ void pointing_device_task(void) {
     rTouchData.xValue = 0;
     rTouchData.yValue = 0;
 #endif
-    process_mouse_user(&report, report_x, report_y);
+    process_mouse_user(&mouse_report, report_x, report_y);
     pointing_device_set_report(mouse_report);
     pointing_device_send();
 }
