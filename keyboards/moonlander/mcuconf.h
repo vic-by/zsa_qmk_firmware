@@ -23,7 +23,7 @@
 
 // for future hardware
 #undef STM32_I2C_USE_I2C2
-#define STM32_I2C_USE_I2C2 TRUE
+#define STM32_I2C_USE_I2C2  TRUE
 
 #undef STM32_I2C_I2C2_IRQ_PRIORITY
 #define STM32_I2C_I2C2_IRQ_PRIORITY         12

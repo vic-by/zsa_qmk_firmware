@@ -77,8 +77,8 @@
 #    endif
 #endif
 
-#ifndef I2C_DRIVER
-#    define I2C_DRIVER I2CD2
+#ifndef I2C2_DRIVER
+#    define I2C2_DRIVER I2CD2
 #endif
 
 #ifdef USE_GPIOV1

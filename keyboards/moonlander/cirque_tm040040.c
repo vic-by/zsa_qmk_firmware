@@ -1,5 +1,5 @@
 // Copyright (c) 2018 Cirque Corp. Restrictions apply. See: www.cirque.com/sw-license
-#include "i2c_master.h"
+#include "i2c2_master.h"
 #include "cirque_tm040040.h"
 #include "pointing_device.h"
 
@@ -71,6 +71,7 @@ void pointing_device_task(void) {
 
 /*  Pinnacle-based TM040040 Functions  */
 void pointing_device_init(void) {
+    i2c2_init();
     // Host clears SW_CC flag
     Pinnacle_ClearFlags();
 
@@ -185,19 +186,19 @@ void RAP_ReadBytes(uint8_t address, uint8_t* data, uint8_t count) {
     uint8_t cmdByte = READ_MASK | address;  // Form the READ command byte
     // uint8_t i       = 0;
 
-    i2c_start(SLAVE_ADDR << 1);
-    i2c_writeReg(SLAVE_ADDR << 1, cmdByte, NULL, 0, I2C_TIMEOUT);
-    i2c_readReg(SLAVE_ADDR << 1, cmdByte, data, count, I2C_TIMEOUT);
-    i2c_stop();
+    i2c2_start(SLAVE_ADDR << 1);
+    i2c2_writeReg(SLAVE_ADDR << 1, cmdByte, NULL, 0, I2C_TIMEOUT);
+    i2c2_readReg(SLAVE_ADDR << 1, cmdByte, data, count, I2C_TIMEOUT);
+    i2c2_stop();
 }
 
 // Writes single-byte <data> to <address>
 void RAP_Write(uint8_t address, uint8_t data) {
     uint8_t cmdByte = WRITE_MASK | address;  // Form the WRITE command byte
 
-    i2c_start(SLAVE_ADDR << 1);
-    i2c_writeReg(SLAVE_ADDR << 1, cmdByte, &data, sizeof(data), I2C_TIMEOUT);
-    i2c_stop();
+    i2c2_start(SLAVE_ADDR << 1);
+    i2c2_writeReg(SLAVE_ADDR << 1, cmdByte, &data, sizeof(data), I2C_TIMEOUT);
+    i2c2_stop();
 }
 
 /*  Logical Scaling Functions */
