@@ -32,6 +32,7 @@ void RAP_ReadBytes(uint8_t address, uint8_t* data, uint8_t count);
 void RAP_Write(uint8_t address, uint8_t data);
 void ClipCoordinates(absData_t* coordinates);
 void ScaleData(absData_t* coordinates, uint16_t xResolution, uint16_t yResolution);
+void process_mouse_user(report_mouse_t* mouse_report, int16_t x, int16_t y);
 
 // Cirque's 7-bit I2C Slave Address
 #define SLAVE_ADDR           0x2A

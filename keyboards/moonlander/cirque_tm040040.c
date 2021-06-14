@@ -26,17 +26,22 @@ bool      touchpad_init[2];
 
 void print_byte(uint8_t byte) { xprintf("%c%c%c%c%c%c%c%c|", (byte & 0x80 ? '1' : '0'), (byte & 0x40 ? '1' : '0'), (byte & 0x20 ? '1' : '0'), (byte & 0x10 ? '1' : '0'), (byte & 0x08 ? '1' : '0'), (byte & 0x04 ? '1' : '0'), (byte & 0x02 ? '1' : '0'), (byte & 0x01 ? '1' : '0')); }
 
+__attribute__((weak)) void process_mouse_user(report_mouse_t* mouse_report, int16_t x, int16_t y) {
+    mouse_report->x = x;
+    mouse_report->y = y;
+}
 void pointing_device_task(void) {
     report_mouse_t mouse_report = pointing_device_get_report();
 #if 1
     static uint16_t x = 0, y = 0;
+    int8_t report_x = 0, report_y = 0;
 
     Pinnacle_GetAbsolute(&touchData);
-    ScaleData(&touchData, 256, 256);  // Scale coordinates to arbitrary X, Y resolution
+    ScaleData(&touchData, 1024, 1024);  // Scale coordinates to arbitrary X, Y resolution
 
     if (x && y && touchData.xValue && touchData.yValue) {
-        mouse_report.x = (int8_t)(touchData.xValue - x);
-        mouse_report.y = (int8_t)(touchData.yValue - y);
+        report_x = (int8_t)(touchData.xValue - x);
+        report_y = (int8_t)(touchData.yValue - y);
     }
     x = touchData.xValue;
     y = touchData.yValue;
@@ -67,6 +72,7 @@ void pointing_device_task(void) {
     rTouchData.xValue = 0;
     rTouchData.yValue = 0;
 #endif
+    process_mouse_user(&report, report_x, report_y);
     pointing_device_set_report(mouse_report);
     pointing_device_send();
 }
