@@ -1,4 +1,5 @@
 // Copyright (c) 2018 Cirque Corp. Restrictions apply. See: www.cirque.com/sw-license
+#include "i2c_master.h"
 #include "i2c2_master.h"
 #include "cirque_tm040040.h"
 #include "pointing_device.h"
@@ -13,7 +14,7 @@
 #endif
 #ifndef FEEDCONFIG_2_VALUE
 // #    define FEEDCONFIG_2_VALUE 0x1F  // 0x1F for normal functionality 0x1E for intellimouse disabled
-#    define FEEDCONFIG_2_VALUE 0x1C // 0x1F for normal functionality 0x1E for intellimouse disabled
+#    define FEEDCONFIG_2_VALUE 0x1C  // 0x1F for normal functionality 0x1E for intellimouse disabled
 #endif
 #ifndef Z_IDLE_COUNT_VALUE
 #    define Z_IDLE_COUNT_VALUE 0x05
@@ -21,12 +22,13 @@
 
 absData_t touchData  = {0};
 relData_t rTouchData = {0};
+bool      touchpad_init[2];
 
 void print_byte(uint8_t byte) { xprintf("%c%c%c%c%c%c%c%c|", (byte & 0x80 ? '1' : '0'), (byte & 0x40 ? '1' : '0'), (byte & 0x20 ? '1' : '0'), (byte & 0x10 ? '1' : '0'), (byte & 0x08 ? '1' : '0'), (byte & 0x04 ? '1' : '0'), (byte & 0x02 ? '1' : '0'), (byte & 0x01 ? '1' : '0')); }
 
 void pointing_device_task(void) {
     report_mouse_t mouse_report = pointing_device_get_report();
-#if FEEDCONFIG_1_VALUE == 0x03
+#if 1
     static uint16_t x = 0, y = 0;
 
     Pinnacle_GetAbsolute(&touchData);
@@ -51,7 +53,7 @@ void pointing_device_task(void) {
     print_byte(touchData.touchDown);
     xprintf("\n");
 
-#elif FEEDCONFIG_1_VALUE == 0x81
+#else
     Pinnacle_GetRelative(&rTouchData);
 
     mouse_report.x = rTouchData.xValue;
@@ -71,7 +73,10 @@ void pointing_device_task(void) {
 
 /*  Pinnacle-based TM040040 Functions  */
 void pointing_device_init(void) {
+    i2c_init();
+    touchpad_init[0] = true;
     i2c2_init();
+    touchpad_init[1] = false;
     // Host clears SW_CC flag
     Pinnacle_ClearFlags();
 
@@ -185,20 +190,46 @@ void ERA_WriteByte(uint16_t address, uint8_t data) {
 void RAP_ReadBytes(uint8_t address, uint8_t* data, uint8_t count) {
     uint8_t cmdByte = READ_MASK | address;  // Form the READ command byte
     // uint8_t i       = 0;
+    if (touchpad_init[0]) {
+        i2c_writeReg(SLAVE_ADDR << 1, cmdByte, NULL, 0, I2C_TIMEOUT);
+        if (i2c_readReg(SLAVE_ADDR << 1, cmdByte, data, count, I2C_TIMEOUT) != I2C_STATUS_SUCCESS) {
+            dprintf("error right touchpad\n");
+            touchpad_init[0] = false;
+        }
+        i2c_stop();
+    }
 
-    i2c2_start(SLAVE_ADDR << 1);
-    i2c2_writeReg(SLAVE_ADDR << 1, cmdByte, NULL, 0, I2C_TIMEOUT);
-    i2c2_readReg(SLAVE_ADDR << 1, cmdByte, data, count, I2C_TIMEOUT);
-    i2c2_stop();
+    if (touchpad_init[1]) {
+        i2c2_writeReg(SLAVE_ADDR << 1, cmdByte, NULL, 0, I2C_TIMEOUT);
+        if (i2c2_readReg(SLAVE_ADDR << 1, cmdByte, data, count, I2C_TIMEOUT) != I2C_STATUS_SUCCESS) {
+            dprintf("error left touchpad\n");
+            touchpad_init[1] = false;
+        }
+        i2c2_stop();
+    }
 }
 
 // Writes single-byte <data> to <address>
 void RAP_Write(uint8_t address, uint8_t data) {
     uint8_t cmdByte = WRITE_MASK | address;  // Form the WRITE command byte
 
-    i2c2_start(SLAVE_ADDR << 1);
-    i2c2_writeReg(SLAVE_ADDR << 1, cmdByte, &data, sizeof(data), I2C_TIMEOUT);
-    i2c2_stop();
+    if (touchpad_init[0]) {
+        if (i2c_writeReg(SLAVE_ADDR << 1, cmdByte, &data, sizeof(data), I2C_TIMEOUT) != I2C_STATUS_SUCCESS) {
+            dprintf("error right touchpad\n");
+            touchpad_init[0] = false;
+        }
+        i2c_stop();
+    }
+    if (address == FEEDCONFIG_1 && data == FEEDCONFIG_1_VALUE) {
+            data = 0xC3;
+    }
+    if (touchpad_init[1]) {
+        if (i2c2_writeReg(SLAVE_ADDR << 1, cmdByte, &data, sizeof(data), I2C_TIMEOUT) != I2C_STATUS_SUCCESS) {
+            dprintf("error left touchpad\n");
+            touchpad_init[1] = false;
+        }
+        i2c2_stop();
+    }
 }
 
 /*  Logical Scaling Functions */

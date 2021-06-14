@@ -19,6 +19,7 @@
 
 
 #include "moonlander.h"
+#include "cirque_tm040040.h"
 #ifdef WEBUSB_ENABLE
 #    include "webusb.h"
 #endif
