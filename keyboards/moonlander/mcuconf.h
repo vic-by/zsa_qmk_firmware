@@ -13,7 +13,6 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
 #pragma once
 
 #include_next "mcuconf.h"
@@ -22,9 +21,14 @@
 #undef STM32_I2C_USE_I2C1
 #define STM32_I2C_USE_I2C1 TRUE
 
-// for future hardwar
+// for future hardware
 #undef STM32_I2C_USE_I2C2
 #define STM32_I2C_USE_I2C2 TRUE
+
+#undef STM32_I2C_I2C2_IRQ_PRIORITY
+#define STM32_I2C_I2C2_IRQ_PRIORITY         12
+#undef STM32_I2C_I2C2_DMA_PRIORITY
+#define STM32_I2C_I2C2_DMA_PRIORITY         2
 
 // for audio
 #undef STM32_DAC_USE_DAC1_CH1
