@@ -43,7 +43,7 @@ void process_mouse_user(report_mouse_t* mouse_report, int16_t x, int16_t y);
 
 // Registers for RAP
 #define FIRMWARE_ID          0x00
-#define FIRMWARE_VERSION     0x01
+#define FIRMWARE_VERSION_C   0x01
 #define STATUS_1             0x02
 #define SYSCONFIG_1          0x03
 #define FEEDCONFIG_1         0x04
