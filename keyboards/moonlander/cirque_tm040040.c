@@ -79,10 +79,16 @@ void pointing_device_init(void) {
     i2c_init();
     touchpad_init[0] = true;
     i2c2_init();
-    touchpad_init[1] = false;
+    touchpad_init[1] = true;
     // Host clears SW_CC flag
     Pinnacle_ClearFlags();
 
+    // clear flags will attempt to ping both pads, and if it errors out,
+    // will de-init that side. So if both sides are connected, and working,
+    // de-init the left side, since we assume right side dominance.
+    if (touchpad_init[0] && touchpad_init[1]) {
+        touchpad_init[1] = false;
+    }
     // Host configures bits of registers 0x03 and 0x05
     RAP_Write(SYSCONFIG_1, SYSCONFIG_1_VALUE);
     RAP_Write(FEEDCONFIG_2, FEEDCONFIG_2_VALUE);
@@ -297,4 +303,3 @@ void tuneEdgeSensitivity(void) {
     ERA_WriteByte(0x0168,  0x03);
     ERA_ReadBytes(0x0168, &temp, 1);
 }
-
