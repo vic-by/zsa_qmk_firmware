@@ -33,7 +33,8 @@ void RAP_Write(uint8_t address, uint8_t data);
 void ClipCoordinates(absData_t* coordinates);
 void ScaleData(absData_t* coordinates, uint16_t xResolution, uint16_t yResolution);
 void process_mouse_user(report_mouse_t* mouse_report, int16_t x, int16_t y);
-
+void setAdcAttenuation(uint8_t adcGain);
+void tuneEdgeSensitivity(void);
 // Cirque's 7-bit I2C Slave Address
 #define SLAVE_ADDR           0x2A
 
@@ -76,3 +77,10 @@ void process_mouse_user(report_mouse_t* mouse_report, int16_t x, int16_t y);
 #define ERA_HIGH_BYTE        0x1C
 #define ERA_LOW_BYTE         0x1D
 #define ERA_CONTROL          0x1E
+
+// ADC-attenuation settings (held in BIT_7 and BIT_6)
+// 1X = most sensitive, 4X = least sensitive
+#define ADC_ATTENUATE_1X   0x00
+#define ADC_ATTENUATE_2X   0x40
+#define ADC_ATTENUATE_3X   0x80
+#define ADC_ATTENUATE_4X   0xC0

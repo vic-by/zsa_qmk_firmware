@@ -52,18 +52,14 @@ void pointing_device_task(void) {
     } else {
         mouse_report.buttons &= ~MOUSE_BTN1;
     }
-    print_byte(touchData.xValue);
-    print_byte(touchData.yValue);
-    print_byte(touchData.zValue);
-    print_byte(touchData.buttonFlags);
-    print_byte(touchData.touchDown);
-    xprintf("\n");
 
 #else
     Pinnacle_GetRelative(&rTouchData);
 
     mouse_report.x = rTouchData.xValue;
     mouse_report.y = rTouchData.yValue;
+    //xprintf("%d", result->buttonFlags);
+    xprintf("\n");
     if (rTouchData.buttonFlags) {
         mouse_report.buttons |= MOUSE_BTN1;
     } else {
@@ -96,6 +92,10 @@ void pointing_device_init(void) {
 
     // Host sets z-idle packet count to 5 (default is 30)
     RAP_Write(Z_IDLE_COUNT, Z_IDLE_COUNT_VALUE);
+
+    setAdcAttenuation(0xFF);
+    tuneEdgeSensitivity();
+    Pinnacle_EnableFeed(true);
 }
 
 // Reads XYZ data from Pinnacle registers 0x14 through 0x17
@@ -110,6 +110,7 @@ void Pinnacle_GetAbsolute(absData_t* result) {
     result->xValue      = data[2] | ((data[4] & 0x0F) << 8);
     result->yValue      = data[3] | ((data[4] & 0xF0) << 4);
     result->zValue      = data[5] & 0x3F;
+
 
     result->touchDown = result->xValue != 0;
 }
@@ -228,7 +229,7 @@ void RAP_Write(uint8_t address, uint8_t data) {
         i2c_stop();
     }
     if (address == FEEDCONFIG_1 && data == FEEDCONFIG_1_VALUE) {
-            data = 0xC3;
+        data = 0xC3;
     }
     if (touchpad_init[1]) {
         if (i2c2_writeReg(SLAVE_ADDR << 1, cmdByte, &data, sizeof(data), I2C_TIMEOUT) != I2C_STATUS_SUCCESS) {
@@ -273,3 +274,27 @@ void ScaleData(absData_t* coordinates, uint16_t xResolution, uint16_t yResolutio
     coordinates->xValue = (uint16_t)(xTemp * xResolution / PINNACLE_X_RANGE);
     coordinates->yValue = (uint16_t)(yTemp * yResolution / PINNACLE_Y_RANGE);
 }
+
+void setAdcAttenuation(uint8_t adcGain) {
+    uint8_t temp = 0x00;
+
+    ERA_ReadBytes(0x0187, &temp, 1);
+    temp &= 0x3F; // clear top two bits
+    temp |= adcGain;
+    ERA_WriteByte(0x0187, temp);
+    ERA_ReadBytes(0x0187, &temp, 1);
+}
+
+// Changes thresholds to improve detection of fingers
+void tuneEdgeSensitivity(void) {
+    uint8_t temp = 0x00;
+
+    ERA_ReadBytes(0x0149, &temp, 1);
+    ERA_WriteByte(0x0149,  0x04);
+    ERA_ReadBytes(0x0149, &temp, 1);
+
+    ERA_ReadBytes(0x0168, &temp, 1);
+    ERA_WriteByte(0x0168,  0x03);
+    ERA_ReadBytes(0x0168, &temp, 1);
+}
+
