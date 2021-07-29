@@ -20,6 +20,14 @@
 #ifndef Z_IDLE_COUNT_VALUE
 #    define Z_IDLE_COUNT_VALUE 0x05
 #endif
+#ifdef TAPPING_TERM_PER_KEY
+#    define TAPPING_CHECK get_tapping_term(KC_BTN1, NULL)
+#else
+#    define TAPPING_CHECK TAPPING_TERM
+#    ifndef TAPPING_TERM
+#        define TAPPING_TERM 150
+#    endif
+#endif
 
 absData_t touchData  = {0};
 relData_t rTouchData = {0};
@@ -50,13 +58,15 @@ void pointing_device_task(void) {
 
     if ((bool)touchData.zValue != is_z_down) {
         is_z_down = (bool)touchData.zValue;
-        if (touchData.zValue) {
-            mouse_timer = timer_read();
-        } else {
-            if (timer_elapsed(mouse_timer) < TAPPING_TERM) {
+        if (!touchData.zValue) {
+            if (timer_elapsed(mouse_timer) < TAPPING_CHECK && mouse_timer != 0) {
                 tap_code(KC_BTN1);
             }
         }
+        mouse_timer = timer_read();
+    }
+    if (timer_elapsed(mouse_timer) > 1500) {
+        mouse_timer = 0;
     }
 
 #if 0
