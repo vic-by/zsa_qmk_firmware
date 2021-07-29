@@ -77,28 +77,36 @@ enum tap_dance_codes {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT_moonlander(
-    TD(DANCE_0),    TD(DANCE_1),    TD(DANCE_2),    TD(DANCE_3),    TD(DANCE_4),    TD(DANCE_5),    TD(DANCE_6),                                    LGUI(KC_EQUAL), KC_6,           KC_7,           KC_8,           KC_9,           KC_0,           KC_MINUS,       
-    KC_DELETE,      TD(DANCE_7),    TD(DANCE_8),    KC_E,           KC_R,           KC_T,           TD(DANCE_9),                                    KC_NO,          KC_Y,           KC_U,           KC_I,           KC_O,           KC_P,           KC_BSLASH,      
+    TD(DANCE_0),    TD(DANCE_1),    TD(DANCE_2),    TD(DANCE_3),    TD(DANCE_4),    TD(DANCE_5),    TD(DANCE_6),                                    LGUI(KC_EQUAL), KC_6,           KC_7,           KC_8,           KC_9,           KC_0,           KC_MINUS,
+    KC_DELETE,      TD(DANCE_7),    TD(DANCE_8),    KC_E,           KC_R,           KC_T,           TD(DANCE_9),                                    KC_NO,          KC_Y,           KC_U,           KC_I,           KC_O,           KC_P,           KC_BSLASH,
     TD(DANCE_10),   KC_A,           KC_S,           KC_D,           TD(DANCE_11),   KC_G,           KC_HYPR,                                                                        KC_MEH,         KC_H,           LGUI_T(KC_J),   RALT_T(KC_K),   KC_L,           LT(2,KC_SCOLON),LGUI_T(KC_QUOTE),
-    KC_LSPO,        LCTL_T(KC_Z),   TD(DANCE_12),   TD(DANCE_13),   TD(DANCE_14),   KC_B,                                           KC_N,           TD(DANCE_19),   KC_COMMA,       KC_DOT,         KC_SLASH,       KC_RSPC,        
-    KC_GRAVE,       KC_ESCAPE,      DPI_CONFIG,     TD(DANCE_15),   KC_SPACE,       LCTL(KC_SPACE),                                                                                                 LGUI(LSFT(KC_SCOLON)),TD(DANCE_20),   TD(DANCE_21),   KC_LBRACKET,    KC_RBRACKET,    KC_NO,          
+    KC_LSPO,        LCTL_T(KC_Z),   TD(DANCE_12),   TD(DANCE_13),   TD(DANCE_14),   KC_B,                                           KC_N,           TD(DANCE_19),   KC_COMMA,       KC_DOT,         KC_SLASH,       KC_RSPC,
+    KC_GRAVE,       KC_ESCAPE,      DPI_CONFIG,     TD(DANCE_15),   KC_SPACE,       LCTL(KC_SPACE),                                                                                                 LGUI(LSFT(KC_SCOLON)),TD(DANCE_20),   TD(DANCE_21),   KC_LBRACKET,    KC_RBRACKET,    KC_NO,
     KC_SPACE,       TD(DANCE_17),   TD(DANCE_18),                   KC_END,         TD(DANCE_22),   KC_ENTER
   ),
   [1] = LAYOUT_moonlander(
-    KC_ESCAPE,      KC_F1,          KC_F2,          KC_F3,          KC_F4,          KC_F5,          KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_F6,          KC_F7,          KC_F8,          KC_F9,          KC_F10,         KC_F11,         
-    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_F12,         
-    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                                                 TOGGLE_LAYER_COLOR,KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, 
-    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                 KC_F2,          KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, 
-    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, LCTL(KC_PGUP),  LCTL(KC_PGDOWN),RGB_MOD,                                                                                                        RGB_TOG,        RGB_HUI,        RGB_HUD,        KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, 
-    RGB_VAD,        RGB_VAI,        TOGGLE_LAYER_COLOR,                RGB_SLD,        KC_TRANSPARENT, LGUI(KC_ENTER)
+    KC_ESC, KC_F1,    KC_F2,   KC_F3,   KC_F4,   KC_F5,   _______,                                 _______, KC_F6,          KC_F7,          KC_F8,          KC_F9,          KC_F10,         KC_F11,
+    _______, _______, _______, _______, _______, _______, _______,                                 _______, _______, _______, _______, _______, _______, KC_F12,
+    _______, _______, _______, _______, _______, _______, _______,                                                                 TOGGLE_LAYER_COLOR,_______, _______, _______, _______, _______, _______,
+    _______, _______, _______, _______, _______, _______,                                 KC_F2,          _______, _______, _______, _______, _______,
+    _______, _______, _______, LCTL(KC_PGUP),  LCTL(KC_PGDOWN),RGB_MOD,                                                                                                        RGB_TOG,        RGB_HUI,        RGB_HUD,        _______, _______, _______,
+    RGB_VAD,        RGB_VAI,        TOGGLE_LAYER_COLOR,                RGB_SLD,        _______, LGUI(KC_ENTER)
   ),
   [2] = LAYOUT_moonlander(
-    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, RESET,          
-    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_5,           KC_TRANSPARENT, KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, MAGIC_TOGGLE_NKRO,
-    KC_TRANSPARENT, KC_LEFT,        KC_UP,          KC_DOWN,        KC_RIGHT,       KC_5,           KC_TRANSPARENT,                                                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_MINUS,       KC_TRANSPARENT, KC_MEDIA_PLAY_PAUSE,
-    KC_TRANSPARENT, KC_6,           KC_7,           KC_8,           KC_9,           KC_0,                                           KC_TRANSPARENT, KC_TRANSPARENT, KC_MEDIA_PREV_TRACK,KC_MEDIA_NEXT_TRACK,KC_TRANSPARENT, KC_TRANSPARENT, 
-    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, LCTL(KC_LEFT),  LCTL(KC_RIGHT), WEBUSB_PAIR,                                                                                                    KC_WWW_FORWARD, KC_AUDIO_VOL_UP,KC_AUDIO_VOL_DOWN,KC_AUDIO_MUTE,  KC_TRANSPARENT, KC_TRANSPARENT, 
-    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                 KC_TRANSPARENT, KC_PGDOWN,      KC_PGUP
+    _______, _______, _______, _______, _______, _______, _______,                                 _______, _______, _______, _______, _______, _______, RESET,
+    _______, _______, _______, _______, KC_5,           _______, _______,                                 _______, _______, _______, _______, _______, _______, MAGIC_TOGGLE_NKRO,
+    _______, KC_LEFT,        KC_UP,          KC_DOWN,        KC_RIGHT,       KC_5,           _______,                                                                 _______, _______, _______, _______, KC_MINUS,       _______, KC_MEDIA_PLAY_PAUSE,
+    _______, KC_6,           KC_7,           KC_8,           KC_9,           KC_0,                                           _______, _______, KC_MEDIA_PREV_TRACK,KC_MEDIA_NEXT_TRACK,_______, _______,
+    _______, _______, _______, LCTL(KC_LEFT),  LCTL(KC_RIGHT), WEBUSB_PAIR,                                                                                                    KC_WWW_FORWARD, KC_AUDIO_VOL_UP,KC_AUDIO_VOL_DOWN,KC_AUDIO_MUTE,  _______, _______,
+    _______, _______, _______,                 _______, KC_PGDOWN,      KC_PGUP
+  ),
+  [3] = LAYOUT_moonlander(
+    _______, _______, _______, _______, _______, _______, _______,                                 _______, _______, _______, _______, _______, _______, _______,
+    _______, _______, _______, _______, _______, _______, _______,                                 _______, KC_WH_U, _______, _______, _______, _______, _______,
+    _______, _______, _______, _______, _______, _______, _______,                                 _______, KC_WH_D, KC_BTN1, KC_BTN3, KC_BTN2, _______, _______,
+    _______, _______, _______, _______, _______, _______,                                                   _______, KC_BTN4, KC_BTN5, _______, _______, _______,
+    _______, _______, _______, _______, _______,          _______,                                 _______,          _______, _______, _______, _______, _______,
+                                                 _______, _______, _______,               _______, _______, _______
   ),
 };
 
@@ -149,16 +157,88 @@ void rgb_matrix_indicators_user(void) {
   }
 }
 
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  switch (keycode) {
-    case RGB_SLD:
-      if (record->event.pressed) {
-        rgblight_mode(1);
-      }
-      return false;
-  }
-  return true;
+#ifdef POINTING_DEVICE_ENABLE
+static uint16_t mouse_timer           = 0;
+static uint16_t mouse_debounce_timer  = 0;
+static uint8_t  mouse_keycode_tracker = 0;
+bool            tap_toggling          = false;
+
+void process_mouse_user(report_mouse_t* mouse_report, int16_t x, int16_t y) {
+    if ((x || y) && timer_elapsed(mouse_timer) > 125) {
+        mouse_timer = timer_read();
+        if (!layer_state_is(3) && timer_elapsed(mouse_debounce_timer) > 125) {
+            layer_on(3);
+        }
+    }
+
+    if (
+#    ifdef TAPPING_TERM_PER_KEY
+        timer_elapsed(mouse_debounce_timer) > get_tapping_term(KC_BTN1, NULL)
+#    else
+        timer_elapsed(mouse_debounce_timer) > TAPPING_TERM
+#    endif
+    && true) {
+        mouse_report->x = x;
+        mouse_report->y = y;
+    }
+#    ifdef OLED_DRIVER_ENABLE
+    if (x || y) oled_timer = timer_read32();
+#    endif
 }
+
+void matrix_scan_user(void) {
+    if (timer_elapsed(mouse_timer) > 650 && layer_state_is(3) && !mouse_keycode_tracker && !tap_toggling) {
+        layer_off(3);
+    }
+    if (tap_toggling) {
+        if (!layer_state_is(3)) {
+            layer_on(3);
+        }
+    }
+}
+
+bool process_record_user(uint16_t keycode, keyrecord_t* record) {
+    switch (keycode) {
+        case TT(3):
+            {
+                if (record->event.pressed) {
+                    mouse_keycode_tracker++;
+                } else {
+#    if TAPPING_TOGGLE != 0
+                    if (record->tap.count == TAPPING_TOGGLE) {
+                        tap_toggling ^= 1;
+#        if TAPPING_TOGGLE == 1
+                        if (!tap_toggling) mouse_keycode_tracker -= record->tap.count + 1;
+#        else
+                        if (!tap_toggling) mouse_keycode_tracker -= record->tap.count;
+#        endif
+                    } else {
+                        mouse_keycode_tracker--;
+                    }
+#    endif
+                }
+                mouse_timer = timer_read();
+                break;
+            }
+        case MO(3):
+        case DPI_CONFIG:
+        case KC_MS_UP ... KC_MS_WH_RIGHT:
+            record->event.pressed ? mouse_keycode_tracker++ : mouse_keycode_tracker--;
+            mouse_timer = timer_read();
+            break;
+        default:
+            if (IS_NOEVENT(record->event)) break;
+            if (layer_state_is(3) && !mouse_keycode_tracker) {
+                layer_off(3);
+            }
+            mouse_keycode_tracker = 0;
+            mouse_debounce_timer  = timer_read();
+            break;
+    }
+    return true;
+}
+
+#endif
 
 typedef struct {
     bool is_press_action;
@@ -1030,4 +1110,3 @@ qk_tap_dance_action_t tap_dance_actions[] = {
         [DANCE_21] = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_21, dance_21_finished, dance_21_reset),
         [DANCE_22] = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_22, dance_22_finished, dance_22_reset),
 };
-
