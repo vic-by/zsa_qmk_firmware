@@ -60,7 +60,16 @@ void pointing_device_task(void) {
         is_z_down = (bool)touchData.zValue;
         if (!touchData.zValue) {
             if (timer_elapsed(mouse_timer) < TAPPING_CHECK && mouse_timer != 0) {
+#if defined(MOUSEKEY_ENABLE)
                 tap_code(KC_BTN1);
+#else
+                mouse_report.buttons |= MOUSE_BTN1;
+                pointing_device_set_report(mouse_report);
+                pointing_device_send();
+                 mouse_report.buttons &= ~MOUSE_BTN1;
+                pointing_device_set_report(mouse_report);
+                pointing_device_send();
+#endif
             }
         }
         mouse_timer = timer_read();
