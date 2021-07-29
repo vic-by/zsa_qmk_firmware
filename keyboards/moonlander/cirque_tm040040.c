@@ -33,9 +33,9 @@ __attribute__((weak)) void process_mouse_user(report_mouse_t* mouse_report, int1
 }
 void pointing_device_task(void) {
     report_mouse_t mouse_report = pointing_device_get_report();
-#if 1
+
     static uint16_t x = 0, y = 0;
-    int8_t report_x = 0, report_y = 0;
+    int8_t          report_x = 0, report_y = 0;
 
     Pinnacle_GetAbsolute(&touchData);
     ScaleData(&touchData, 256 * keyboard_config.dpi_config, 256 * keyboard_config.dpi_config);  // Scale coordinates to arbitrary X, Y resolution
@@ -47,28 +47,19 @@ void pointing_device_task(void) {
     x = touchData.xValue;
     y = touchData.yValue;
 
-    if (rTouchData.buttonFlags) {
-        mouse_report.buttons |= MOUSE_BTN1;
-    } else {
-        mouse_report.buttons &= ~MOUSE_BTN1;
-    }
-
-#else
-    Pinnacle_GetRelative(&rTouchData);
-
-    mouse_report.x = rTouchData.xValue;
-    mouse_report.y = rTouchData.yValue;
-    //xprintf("%d", result->buttonFlags);
-    xprintf("\n");
-    if (rTouchData.buttonFlags) {
-        mouse_report.buttons |= MOUSE_BTN1;
-    } else {
-        mouse_report.buttons &= ~MOUSE_BTN1;
-    }
-
-    rTouchData.xValue = 0;
-    rTouchData.yValue = 0;
+#if 0
+    mouse_report.buttons = touchData.buttonFlags;
 #endif
+
+#if defined(CONSOLE_ENABLE)
+    print_byte(touchData.xValue);
+    print_byte(touchData.yValue);
+    print_byte(touchData.zValue);
+    print_byte(touchData.buttonFlags);
+    print_byte(touchData.touchDown);
+    xprintf("\n");
+#endif
+
     process_mouse_user(&mouse_report, report_x, report_y);
     pointing_device_set_report(mouse_report);
     pointing_device_send();
@@ -117,8 +108,7 @@ void Pinnacle_GetAbsolute(absData_t* result) {
     result->yValue      = data[3] | ((data[4] & 0xF0) << 4);
     result->zValue      = data[5] & 0x3F;
 
-
-    result->touchDown = result->xValue != 0;
+    result->touchDown = (result->xValue != 0 || result->yValue != 0);
 }
 
 void Pinnacle_GetRelative(relData_t* result) {
@@ -285,7 +275,7 @@ void setAdcAttenuation(uint8_t adcGain) {
     uint8_t temp = 0x00;
 
     ERA_ReadBytes(0x0187, &temp, 1);
-    temp &= 0x3F; // clear top two bits
+    temp &= 0x3F;  // clear top two bits
     temp |= adcGain;
     ERA_WriteByte(0x0187, temp);
     ERA_ReadBytes(0x0187, &temp, 1);
@@ -296,10 +286,10 @@ void tuneEdgeSensitivity(void) {
     uint8_t temp = 0x00;
 
     ERA_ReadBytes(0x0149, &temp, 1);
-    ERA_WriteByte(0x0149,  0x04);
+    ERA_WriteByte(0x0149, 0x04);
     ERA_ReadBytes(0x0149, &temp, 1);
 
     ERA_ReadBytes(0x0168, &temp, 1);
-    ERA_WriteByte(0x0168,  0x03);
+    ERA_WriteByte(0x0168, 0x03);
     ERA_ReadBytes(0x0168, &temp, 1);
 }
