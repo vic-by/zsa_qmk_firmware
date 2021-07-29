@@ -34,8 +34,9 @@ __attribute__((weak)) void process_mouse_user(report_mouse_t* mouse_report, int1
 void pointing_device_task(void) {
     report_mouse_t mouse_report = pointing_device_get_report();
 
-    static uint16_t x = 0, y = 0;
+    static uint16_t x = 0, y = 0, mouse_timer = 0;
     int8_t          report_x = 0, report_y = 0;
+    static bool     is_z_down = false;
 
     Pinnacle_GetAbsolute(&touchData);
     ScaleData(&touchData, 256 * keyboard_config.dpi_config, 256 * keyboard_config.dpi_config);  // Scale coordinates to arbitrary X, Y resolution
@@ -46,6 +47,17 @@ void pointing_device_task(void) {
     }
     x = touchData.xValue;
     y = touchData.yValue;
+
+    if ((bool)touchData.zValue != is_z_down) {
+        is_z_down = (bool)touchData.zValue;
+        if (touchData.zValue) {
+            mouse_timer = timer_read();
+        } else {
+            if (timer_elapsed(mouse_timer) < TAPPING_TERM) {
+                tap_code(KC_BTN1);
+            }
+        }
+    }
 
 #if 0
     mouse_report.buttons = touchData.buttonFlags;
