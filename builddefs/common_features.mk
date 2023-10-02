@@ -984,3 +984,9 @@ ifeq ($(strip $(UART_DRIVER_REQUIRED)), yes)
         QUANTUM_LIB_SRC += uart.c
     endif
 endif
+
+
+ifeq ($(strip $(ACHORDION_ENABLE)), yes)
+    OPT_DEFS += -DACHORDION_ENABLE -DPERMISSIVE_HOLD
+    SRC += $(QUANTUM_DIR)/process_keycode/process_achordion.c
+endif
