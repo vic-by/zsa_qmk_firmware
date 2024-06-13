@@ -18,14 +18,14 @@
 
 #include_next <mcuconf.h>
 
-// for i2c expander, and ISSI
-#undef STM32_I2C_USE_I2C1
-#define STM32_I2C_USE_I2C1 TRUE
-
-// for audio
-#undef STM32_DAC_USE_DAC1_CH1
-#define STM32_DAC_USE_DAC1_CH1 TRUE
-#undef STM32_DAC_USE_DAC1_CH2
-#define STM32_DAC_USE_DAC1_CH2 TRUE
-#undef STM32_GPT_USE_TIM6
-#define STM32_GPT_USE_TIM6 TRUE
+#ifdef REMAPPED_LEDS
+#    undef STM32_PWM_USE_TIM3
+#    define STM32_PWM_USE_TIM3 TRUE
+#else
+#    undef STM32_PWM_USE_TIM8
+#    define STM32_PWM_USE_TIM8 TRUE
+#    undef STM32_PWM_USE_TIM16
+#    define STM32_PWM_USE_TIM16 TRUE
+#    undef STM32_PWM_USE_ADVANCED
+#    define STM32_PWM_USE_ADVANCED TRUE
+#endif

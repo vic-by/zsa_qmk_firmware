@@ -123,4 +123,5 @@ via*.json
 /users/**
 /layouts/community/**
 /keyboards/**
+!/keyboards/zsa/
 !/keyboards/zsa/**

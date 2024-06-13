@@ -13,19 +13,9 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
 #pragma once
 
-#include_next <mcuconf.h>
+#define HAL_USE_I2C TRUE
+#define HAL_USE_PWM TRUE
 
-// for i2c expander, and ISSI
-#undef STM32_I2C_USE_I2C1
-#define STM32_I2C_USE_I2C1 TRUE
-
-// for audio
-#undef STM32_DAC_USE_DAC1_CH1
-#define STM32_DAC_USE_DAC1_CH1 TRUE
-#undef STM32_DAC_USE_DAC1_CH2
-#define STM32_DAC_USE_DAC1_CH2 TRUE
-#undef STM32_GPT_USE_TIM6
-#define STM32_GPT_USE_TIM6 TRUE
+#include_next <halconf.h>
