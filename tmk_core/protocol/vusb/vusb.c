@@ -147,12 +147,13 @@ static void send_report(uint8_t endpoint, void *report, size_t size) {
 static uint8_t raw_output_buffer[RAW_BUFFER_SIZE];
 static uint8_t raw_output_received_bytes = 0;
 
-void raw_hid_send(uint8_t *data, uint8_t length) {
+bool raw_hid_send(uint8_t *data, uint8_t length) {
     if (length != RAW_BUFFER_SIZE) {
-        return;
+        return false;
     }
 
     send_report(4, data, 32);
+    return true;
 }
 
 __attribute__((weak)) void raw_hid_receive(uint8_t *data, uint8_t length) {

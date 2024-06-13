@@ -138,9 +138,9 @@ USB_ClassInfo_CDC_Device_t cdc_device = {
  *
  * FIXME: Needs doc
  */
-void raw_hid_send(uint8_t *data, uint8_t length) {
-    if (length != RAW_EPSIZE) return;
-    send_report(RAW_IN_EPNUM, data, RAW_EPSIZE);
+bool raw_hid_send(uint8_t *data, uint8_t length) {
+    if (length != RAW_EPSIZE) return false;
+    return send_report(RAW_IN_EPNUM, data, RAW_EPSIZE);
 }
 
 /** \brief Raw HID Receive
