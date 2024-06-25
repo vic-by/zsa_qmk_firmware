@@ -18,6 +18,9 @@
 #pragma once
 
 #include "quantum.h"
+#ifdef ORYX_ENABLE
+#    include "oryx.h"
+#endif // ORYX_ENABLE
 
 void planck_ez_right_led_on(void);
 void planck_ez_right_led_off(void);

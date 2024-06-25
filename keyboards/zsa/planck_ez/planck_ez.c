@@ -146,7 +146,6 @@ void eeconfig_init_kb(void) {  // EEPROM is getting reset!
 }
 
 
-#ifdef ORYX_CONFIGURATOR
 
 #ifndef PLANCK_EZ_USER_LEDS
 
@@ -179,6 +178,9 @@ layer_state_t layer_state_set_kb(layer_state_t state) {
         default:
             break;
     }
+#ifdef ORYX_ENABLE
+    layer_state_set_oryx(state);
+#endif
     return state;
 }
 #endif
@@ -228,7 +230,6 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
     }
     return process_record_user(keycode, record);
 }
-#endif
 
 #ifdef AUDIO_ENABLE
 bool music_mask_kb(uint16_t keycode) {

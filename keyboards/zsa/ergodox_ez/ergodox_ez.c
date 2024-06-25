@@ -242,9 +242,16 @@ __attribute__((weak)) const is31_led PROGMEM g_is31_leds[RGB_MATRIX_LED_COUNT] =
 
 #endif
 
+#ifdef ORYX_ENABLE
+layer_state_t layer_state_set_kb(layer_state_t state) {
+    state = layer_state_set_user(state);
+    layer_state_set_oryx(state);
+    return state;
+}
+#endif
+
 bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-#ifdef ORYX_CONFIGURATOR
         case LED_LEVEL:
             if (record->event.pressed) {
                 keyboard_config.led_level++;
@@ -278,7 +285,6 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
 #    endif
-#endif
     }
     return process_record_user(keycode, record);
 }

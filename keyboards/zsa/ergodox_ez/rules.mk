@@ -2,11 +2,10 @@
 CUSTOM_MATRIX = lite
 
 #project specific files
-SRC += matrix.c \
-	   led_i2c.c
-
-QUANTUM_LIB_SRC += i2c_master.c
+SRC += matrix.c
+I2C_DRIVER_REQUIRED = yes
 
 MOUSE_SHARED_EP = no
 
 DEFAULT_FOLDER = zsa/ergodox_ez/m32u4/base
+include keyboards/zsa/common/features.mk
