@@ -26,6 +26,6 @@ void raw_hid_receive(uint8_t *data, uint8_t length);
  * \param data A pointer to the data to send. Must always be 32 bytes in length.
  * \param length The length of the buffer. Must always be 32.
  */
-bool raw_hid_send(uint8_t *data, uint8_t length);
+void raw_hid_send(uint8_t *data, uint8_t length);
 
 /** \} */
