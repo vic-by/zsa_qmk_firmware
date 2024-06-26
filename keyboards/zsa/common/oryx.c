@@ -15,8 +15,20 @@ rawhid_state_t rawhid_state = {
 
 uint8_t pairing_input_index = 0;
 
+#if defined(PROTOCOL_LUFA)
+void send_report(uint8_t endpoint, void *report, size_t size);
+#    define RAW_EP_NAME RAW_IN_EPNUM
+#elif defined(PROTOCOL_CHIBIOS)
+#    include "usb_endpoints.h"
+#    define RAW_EP_NAME USB_ENDPOINT_IN_RAW
+bool send_report(usb_endpoint_in_lut_t endpoint, void *report, size_t size);
+#endif
+
 void raw_hid_send_oryx(uint8_t *data, uint8_t length) {
-    if (!raw_hid_send(data, length)) {
+    if (length != RAW_EPSIZE) {
+        return;
+    }
+    if (!send_report(RAW_EP_NAME, data, length)) {
         rawhid_state.paired = false;
     }
 }
