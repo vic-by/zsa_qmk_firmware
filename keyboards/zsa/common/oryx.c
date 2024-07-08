@@ -4,10 +4,6 @@
 #include <string.h>
 #include "oryx.h"
 
-#ifndef FIRMWARE_VERSION
-#    define FIRMWARE_VERSION u8"default/latest"
-#endif // FIRMWARE_VERSION
-
 rawhid_state_t rawhid_state = {
     .paired      = false,
     .rgb_control = false,
@@ -110,13 +106,13 @@ void raw_hid_receive(uint8_t *data, uint8_t length) {
     switch (command) {
         case ORYX_CMD_GET_FW_VERSION: {
             uint8_t event[RAW_EPSIZE];
-            uint8_t fw_version_size = sizeof(FIRMWARE_VERSION);
+            uint8_t fw_version_size = sizeof(SERIAL_NUMBER);
             uint8_t stop[1];
 
             event[0] = ORYX_EVT_GET_FW_VERSION;
             stop[0]  = ORYX_STOP_BIT;
 
-            memcpy(event + 1, FIRMWARE_VERSION, fw_version_size);
+            memcpy(event + 1, SERIAL_NUMBER, fw_version_size);
             memcpy(event + fw_version_size, stop, 1);
 
             raw_hid_send_oryx(event, RAW_EPSIZE);

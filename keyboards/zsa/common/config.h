@@ -4,9 +4,9 @@
 #pragma once
 
 #ifdef ORYX_ENABLE
-#    ifndef FIRMWARE_VERSION
-#        define FIRMWARE_VERSION u8"default/latest"
-#    endif // FIRMWARE_VERSION
+#    ifndef SERIAL_NUMBER
+#        define SERIAL_NUMBER default/latest
+#    endif // SERIAL_NUMBER
 #    ifndef RAW_USAGE_PAGE
 #        define RAW_USAGE_PAGE 0xFF60
 #    endif // RAW_USAGE_PAGE
