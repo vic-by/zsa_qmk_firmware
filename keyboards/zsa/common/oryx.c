@@ -2,11 +2,13 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include <string.h>
+#include QMK_KEYBOARD_H
 #include "oryx.h"
 
 rawhid_state_t rawhid_state = {
     .paired      = false,
     .rgb_control = false,
+    .status_led_control = false,
 };
 
 uint8_t pairing_input_index = 0;
@@ -250,6 +252,26 @@ void raw_hid_receive(uint8_t *data, uint8_t length) {
         }
         case ORYX_STATUS_LED_CONTROL: {
             rawhid_state.status_led_control = param[0];
+            if (!param[0]) {
+#ifdef STATUS_LED_1
+                STATUS_LED_1(0);
+#endif
+#ifdef STATUS_LED_2
+                STATUS_LED_2(0);
+#endif
+#ifdef STATUS_LED_3
+                STATUS_LED_3(0);
+#endif
+#ifdef STATUS_LED_4
+                STATUS_LED_4(0);
+#endif
+#ifdef STATUS_LED_5
+                STATUS_LED_5(0);
+#endif
+#ifdef STATUS_LED_6
+                STATUS_LED_6(0);
+#endif
+            }
             uint8_t event[RAW_EPSIZE];
             event[0]            = ORYX_EVT_STATUS_LED_CONTROL;
             event[1]            = rawhid_state.status_led_control;
