@@ -396,6 +396,9 @@ void keyboard_post_init_kb(void) {
         eeconfig_update_kb(keyboard_config.raw);
     }
 #ifdef RGB_MATRIX_ENABLE
+    if (rgb_matrix_get_mode() >= RGB_MATRIX_EFFECT_MAX) {
+            rgb_matrix_mode(RGB_MATRIX_NONE);
+    }
     rgb_matrix_enable_noeeprom();
 #endif
 #if defined(DEFERRED_EXEC_ENABLE)

@@ -38,6 +38,11 @@ void keyboard_post_init_kb(void) {
     keyboard_config.raw = eeconfig_read_kb();
     ergodox_led_all_set((uint8_t)keyboard_config.led_level * 255 / 4);
     ergodox_blink_all_leds();
+#    if defined(RGB_MATRIX_ENABLE)
+    if (rgb_matrix_get_mode() >= RGB_MATRIX_EFFECT_MAX) {
+            rgb_matrix_mode(RGB_MATRIX_NONE);
+    }
+#    endif
 
     keyboard_post_init_user();
 }
