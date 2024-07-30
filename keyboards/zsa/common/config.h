@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #pragma once
+#include "keycode_aliases.h"
 
 #ifdef ORYX_ENABLE
 #    ifndef SERIAL_NUMBER
