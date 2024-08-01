@@ -11,7 +11,7 @@ bool is_launching     = false;
 
 #if defined(DEFERRED_EXEC_ENABLE)
 #    if defined(DYNAMIC_MACRO_ENABLE)
-deferred_token dynamic_macro_token = INVALID_DEFERRED_TOKEN;
+deferred_token  dynamic_macro_token = INVALID_DEFERRED_TOKEN;
 static uint32_t dynamic_macro_led(uint32_t trigger_time, void *cb_arg) {
     static bool led_state = true;
     if (!is_launching) {
@@ -97,9 +97,9 @@ layer_state_t layer_state_set_kb(layer_state_t state) {
 #if !defined(VOYAGER_USER_LEDS)
     state = layer_state_set_user(state);
     if (is_launching || !keyboard_config.led_level) return state;
-#ifdef ORYX_ENABLE
+#    ifdef ORYX_ENABLE
     if (rawhid_state.status_led_control) return state;
-#endif
+#    endif
     uint8_t layer = get_highest_layer(state);
     STATUS_LED_1(layer & (1 << 0));
     STATUS_LED_2(layer & (1 << 1));

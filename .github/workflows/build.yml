@@ -13,6 +13,12 @@ jobs:
   build-firmware:
     runs-on: ubuntu-latest
     container: qmkfm/qmk_cli
+    strategy:
+      fail-fast: false
+      matrix:
+        keymap:
+          - default
+          - oryx
 
     steps:
     - name: Checkout QMK Firmware
@@ -25,4 +31,4 @@ jobs:
     - name: Build
       id: build
       run: |
-        qmk mass-compile -f manufacturer="ZSA Technology Labs" -km default
+        qmk mass-compile -f manufacturer="ZSA Technology Labs" -km ${{ matrix.keymap }} -e SKIP_GIT=1
