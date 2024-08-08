@@ -33,7 +33,9 @@ void raw_hid_send_oryx(uint8_t *data, uint8_t length) {
         return;
     }
     if (!send_report(RAW_EP_NAME, data, length)) {
+        #if !defined(PROTOCOL_LUFA)
         rawhid_state.paired = false;
+        #endif
     }
 }
 
