@@ -4,14 +4,15 @@
 #include <string.h>
 #include QMK_KEYBOARD_H
 #include "oryx.h"
+#include "action_util.h"
+
+uint8_t current_layer = 0;
 
 rawhid_state_t rawhid_state = {
     .paired      = false,
     .rgb_control = false,
     .status_led_control = false,
 };
-
-uint8_t pairing_input_index = 0;
 
 #if defined(PROTOCOL_LUFA)
 bool send_report(uint8_t endpoint, void *report, size_t size);
@@ -298,13 +299,18 @@ bool pre_process_record_kb(uint16_t keycode, keyrecord_t *record) {
 
 void layer_state_set_oryx(layer_state_t state) {
     if (rawhid_state.paired) {
+        uint8_t layer = get_highest_layer(state);
+        // Some layer actions (OSL) trigger the layer state change thrice,
+        // so we need to check if the layer has actually changed
+        if (current_layer == layer) return;
+        current_layer = layer;
 #if defined(PROTOCOL_LUFA)
         // Required for Atmel Boards
         wait_ms(10);
 #endif
         uint8_t event[RAW_EPSIZE];
         event[0]            = ORYX_EVT_LAYER;
-        event[1]            = get_highest_layer(state);
+        event[1]            = current_layer;
         event[2]            = ORYX_STOP_BIT;
         raw_hid_send_oryx(event, sizeof(event));
     }
